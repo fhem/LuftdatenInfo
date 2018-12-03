@@ -89,8 +89,7 @@
 ## Attribute
   - `disable 1`  
     Es werden keine Abfragen mehr gestartet.
-  - [<span class="underline">`disabledForIntervals HH:MM-HH:MM
-    HH:MM-HH-MM ...`</span>](#disabledForIntervals)
+  - [`disabledForIntervals HH:MM-HH:MM HH:MM-HH-MM ...`](#disabledForIntervals)
   - `interval <seconds>`  
     Intervall in Sekunden in dem Abfragen durchgeführt werden.  
     Der Vorgabe- und Mindestwert beträgt 300 Sekunden.

@@ -557,363 +557,207 @@ sub LuftdatenInfo_statusRequest($) {
 
 =begin html
 
-<a name="LuftdatenInfo"></a>
-<h3>LuftdatenInfo</h3>
-(en | <a href="commandref_DE.html#LuftdatenInfo"><u>de</u></a>)
-<div>
-  <ul>
-    LuftdatenInfo is the FHEM module to read particulate matter, temperature
-    and humidity values ​​from the self-assembly particulate matter sensors
-    from <a href="http://Luftdaten.info"><u>Luftdaten.info</u></a>.<br>
-    The values ​​can be queried directly from the server or locally.<br>
-    There is an
-    <a href="https://forum.fhem.de/index.php/topic,73879">
-      <u>alternative Firmware</u>
-    </a>
-     to support more sensors.<br>
-    <br>
-    <b>Prerequisites</b>
-    <ul>
-      The Perl module "JSON" is required.<br>
-      Under Debian (based) system, this can be installed using
-      <code>"apt-get install libjson-perl"</code>.
-    </ul>
-    <br>
-    <a name="LuftdatenInfodefine"></a>
-    <b>Define</b>
-    <ul>
-      <code>
-        define &lt;name&gt; LuftdatenInfo remote
-          &lt;SENSORID1&gt; [&lt;SENSORID2&gt; ..]<br>
-        define &lt;name&gt; LuftdatenInfo local &lt;IP&gt;<br>
-        define &lt;name&gt; LuftdatenInfo
-          slave &lt;master-name&gt; &lt;sensor1 sensor2 ...&gt;
-      </code><br>
-      To query the data from the server, all affected SensorIDs must be
-      specified. The IDs of the SDS01 stands right at
-      <a href="http://maps.luftdaten.info/">
-        <u>http://maps.luftdaten.info/</u>
-      </a>
-      . The DHT22 SensorID is usually the SDS011 SensorID + 1. While parsing
-      the data the location values from all sensors will be compared and a
-      message will be written into the log if they differ.<br>
-      For a local query of the data, the IP address or hostname must be
-      specified.<br>
-      If several similar sensors are used, the duplicate values can be written
-      in another device.
-    </ul><br>
-    <a name="LuftdatenInfoset"></a>
-    <b>Set</b>
-    <ul>
-      <li>
-        <code>statusRequest</code><br>
-        Starts a status request.
-      </li>
-    </ul><br>
-    <a name="LuftdatenInfoget"></a>
-    <b>Get</b>
-    <ul>
-      <li>
-        <code>sensors</code><br>
-        Lists all senors.
-      </li>
-    </ul><br>
-    <a name="LuftdatenInforeadings"></a>
-    <b>Readings</b><br>
-    <ul>
-      <li>
-        <code>airQuality</code>
-        1 => good<br>
-        2 => moderate<br>
-        3 => unhealthy for sensitive groups<br>
-        4 => unhealthy<br>
-        5 => very unhealthy<br>
-        6 => hazardous<br>
-      </li>
-      <li>
-        <code>altitude</code>
-      </li>
-      <li>
-        <code>humidity</code><br>
-        Relative humidity in %
-      </li>
-      <li>
-        <code>illuminanceFull</code><br>
-        Illuminace of the full spectrum in lux
-      </li>
-      <li>
-        <code>illuminanceIR</code><br>
-        Iilluminace of the IR spectrum in lux
-      </li>
-      <li>
-        <code>illuminanceUV</code><br>
-        Iilluminace of the UV spectrum in lux
-      </li>
-      <li>
-        <code>illuminanceVisible</code><br>
-        Iilluminace of the visible spectrum in lux
-      </li>
-      <li>
-        <code>latitude</code>
-      </li>
-      <li>
-        <code>location</code><br>
-        location as "postcode city"<br>
-        Only available with remote query.
-      </li>
-      <li>
-        <code>longitude</code>
-      </li>
-      <li>
-        <code>PM1</code><br>
-        Quantity of particles with a diameter of less than 1 μm in μg/m³
-      </li>
-      <li>
-        <code>PM2.5</code><br>
-        Quantity of particles with a diameter of less than 2.5 μm in μg/m³
-      </li>
-      <li>
-        <code>PM10</code><br>
-        Quantity of particles with a diameter of less than 10 μm in μg/m³
-      </li>
-      <li>
-        <code>pressure</code><br>
-        Pressure in hPa
-      </li>
-      <li>
-        <code>pressureNN</code><br>
-        Pressure at sea level in hPa<br>
-        Is calculated if pressure and temperature sensor are active and the
-        sensor is not at sea level.<br>
-        The height, can be determined by maps or SmartPhone, needs to be
-        specified at the configuration page.
-      </li>
-      <li>
-        <code>signal</code><br>
-        WLAN signal strength in dBm<br>
-        Only available with local query.
-      </li>
-      <li>
-        <code>temperature</code><br>
-        Temperature in °C
-      </li>
-      <li>
-        <code>UVIntensity</code><br>
-        UV intensity in W
-      </li>
-      <li>
-        <code>UVRisk</code><br>
-        UV risk from 1 to 5
-      </li>
-    </ul><br>
-    <a name="LuftdatenInfoattr"></a>
-    <b>Attribute</b>
-    <ul>
-      <li>
-        <code>disable 1</code><br>
-        No queries are started.
-      </li>
-      <li>
-        <a href="#disabledForIntervals">
-          <u><code>disabledForIntervals HH:MM-HH:MM HH:MM-HH-MM ...</code></u>
-        </a>
-      </li>
-      <li>
-        <code>interval &lt;seconds&gt;</code><br>
-        Interval in seconds in which queries are performed.<br>
-        The default and minimum value is 300 seconds.
-      </li>
-      <li>
-        <code>timeout &lt;seconds&gt;</code><br>
-        Timeout in seconds for the queries.<br>
-        The default and minimum value is 5 seconds.
-      </li>
-    </ul>
-  </ul>
-</div>
+<p><span id="LuftdatenInfo"></span></p>
+<h1 id="luftdateninfo">LuftdatenInfo</h1>
+<p>LuftdatenInfo is the FHEM module to read particulate matter, temperature and humidity values ​​from the self-assembly particulate matter sensors from <a href="Luftdaten.info" class="uri">Luftdaten.info</a>.<br>
+The values ​​can be queried directly from the server or locally. There is an <a href="forum.fhem.de/index.php/topic,73879">alternative Firmware</a> to support more sensors.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>The Perl module "JSON" is required.<br>
+Under Debian (based) system, this can be installed using<br>
+<code>apt-get install libjson-perl</code>.</p>
+<p><span id="LuftdatenInfodefine"></span></p>
+<h2 id="define">Define</h2>
+<p>Query of Luftdaten.info:<br>
+<code>define &lt;name&gt; air data info remote &lt;SENSORID1&gt; [&lt;SENSORID2&gt; ..]</code><br>
+Local query:<br>
+<code>define &lt;name&gt; Air DataInfo local &lt;IP&gt;</code><br>
+Redirecting readings:<br>
+<code>define &lt;name&gt; LuftdatenInfo slave &lt;master-name&gt; &lt;sensor1 sensor2 ...&gt;</code></p>
+<p>To query the data from the server, all affected SensorIDs must be specified. The IDs of the SDS01 are on the right side of the page <a href="maps.Luftdaten.info" class="uri">maps.Luftdaten.info</a>. The DHT22 SensorID normally corresponds to the SDS011 SensorID + 1.<br>
+While parsing the data the location values from all sensors will be compared and a message will be written into the log if they differ.</p>
+<p>For a local query of the data, the IP address or hostname must be specified.</p>
+<p>If several similar sensors are operated locally, the double values (e.g. temperature) can be redirected to a slave device.</p>
+<p><span id="LuftdatenInfoset"></span></p>
+<h2 id="set">Set</h2>
+<ul>
+  <li><code>statusRequest</code><br>
+  Starts a status request.</li>
+</ul>
+<p><span id="LuftdatenInfoget"></span></p>
+<h2 id="get">Get</h2>
+<ul>
+  <li><code>sensors</code><br>
+  Lists all senors.</li>
+</ul>
+<p><span id="LuftdatenInforeadings"></span></p>
+<h2 id="readings">Readings</h2>
+<ul>
+  <li><code>airQuality</code><br>
+  1 =&gt; good<br>
+  2 =&gt; moderate<br>
+  3 =&gt; unhealthy for sensitive groups<br>
+  4 =&gt; unhealthy<br>
+  5 =&gt; very unhealthy<br>
+  6 =&gt; hazardous</li>
+  <li><code>altitude</code></li>
+  <li><code>humidity</code><br>
+  Relative humidity in %</li>
+  <li><code>illuminanceFull</code><br>
+  Illuminace of the full spectrum in lux</li>
+  <li><code>illuminanceIR</code><br>
+  Iilluminace of the IR spectrum in lux</li>
+  <li><code>illuminanceUV</code><br>
+  Iilluminace of the UV spectrum in lux</li>
+  <li><code>illuminanceVisible</code><br>
+  Iilluminace of the visible spectrum in lux</li>
+  <li><code>latitude</code></li>
+  <li><code>location</code><br>
+  location as "postcode city"<br>
+  Only available with remote query.</li>
+  <li><code>longitude</code></li>
+  <li><code>PM1</code><br>
+  Quantity of particles with a diameter of less than 1 μm in μg/m³</li>
+  <li><code>PM2.5</code><br>
+  Quantity of particles with a diameter of less than 2.5 μm in μg/m³</li>
+  <li><code>PM10</code><br>
+  Quantity of particles with a diameter of less than 10 μm in μg/m³</li>
+  <li><code>pressure</code><br>
+  Pressure in hPa</li>
+  <li><code>pressureNN</code><br>
+  Pressure at sea level in hPa. Is calculated if pressure and temperature sensor are active and the sensor is not at sea level.<br>
+  The height, can be determined by maps or SmartPhone, needs to be specified at the configuration page.</li>
+  <li><code>signal</code><br>
+  WLAN signal strength in dBm<br>
+  Only available with local query.</li>
+  <li><code>temperature</code><br>
+  Temperature in °C</li>
+  <li><code>UVIntensity</code><br>
+  UV intensity in W</li>
+  <li><code>UVRisk</code><br>
+  UV risk from 1 to 5</li>
+</ul>
+<p><span id="LuftdatenInfoattr"></span></p>
+<h2 id="attribute">Attribute</h2>
+<ul>
+  <li><code>disable 1</code><br>
+  No queries are started.</li>
+  <li>
+    <a href="#disabledForIntervals"><code>disabledForIntervals HH:MM-HH:MM HH:MM-HH-MM ...</code></a>
+  </li>
+  <li><code>interval &lt;seconds&gt;</code><br>
+  Interval in seconds in which queries are performed.<br>
+  The default and minimum value is 300 seconds.</li>
+  <li><code>rawReading 1</code><br>
+  The readings names used are those specified in the firmware. This can be useful if new sensors are connected to the NodeMCU for which no mapping exists yet.</li>
+  <li><code>timeout &lt;seconds&gt;</code><br>
+  Timeout in seconds for the queries.<br>
+  The default and minimum value is 5 seconds.</li>
+</ul>
 
 =end html
 
 =begin html_DE
 
-<a name="LuftdatenInfo"></a>
-<h3>LuftdatenInfo</h3>
-(<a href="commandref.html#LuftdatenInfo"><u>en</u></a> | de)
-<div>
-  <ul>
-    LuftdatenInfo ist das FHEM Modul um Feinstaub-, Temperatur- und
-    Luftfeuchtichkeitswerte von den selbstbau Feinstaub Sensoren von
-    <a href="http://Luftdaten.info"><u>Luftdaten.info</u></a> auszulesen.<br>
-    Dabei k&ouml;nnen die Werte direkt vom Server oder auch lokal abgefragt
-    werden.<br>
-    Bei einer lokalen Abfrage werden durch eine
-    <a href="https://forum.fhem.de/index.php/topic,73879">
-      <u>alternative Firmware</u>
-    </a>
-     noch weitere Sensoren unterstützt.<br>
-    <br>
-    <b>Vorraussetzungen</b>
-    <ul>
-      Das Perl-Modul "JSON" wird ben&ouml;tigt.<br>
-      Unter Debian (basierten) System, kann dies mittels
-      <code>"apt-get install libjson-perl"</code> installiert werden.
-    </ul>
-    <br>
-    <a name="LuftdatenInfodefine"></a>
-    <b>Define</b>
-    <ul>
-      <code>
-        define &lt;name&gt; LuftdatenInfo remote
-          &lt;SENSORID1&gt; [&lt;SENSORID2&gt; ..]<br>
-        define &lt;name&gt; LuftdatenInfo local &lt;IP&gt;<br>
-        define &lt;name&gt; LuftdatenInfo
-          slave &lt;master-name&gt; &lt;sensor1 sensor2 ...&gt;
-      </code><br>
-      F&uuml;r eine Abfrage der Daten vom Server müssem alle betroffenenen
-      SensorIDs angegeben werden. Die IDs vom SDS01 stehen rechts auf der Seite
-      <a href="http://maps.luftdaten.info/">
-        <u>http://maps.luftdaten.info/</u>
-      </a>
-      . Die DHT22 SensorID entspricht normalerweise der SDS011 SensorID + 1.
-      Bei einer Abfrage werden die die Positionsangaben verglichen und bei
-      einer Abweichung eine Meldung ins Log geschrieben.<br>
-      F&uuml;r eine lokale Abfrage der Daten muss die IP Addresse oder der
-      Hostname angegeben werden.<br>
-      Werden mehrere ähnliche Sensoren betrieben lassen sich die doppelten
-      Werte in einem anderen Gerät geschrieben werden.
-    </ul><br>
-    <a name="LuftdatenInfoset"></a>
-    <b>Set</b>
-    <ul>
-      <li>
-        <code>statusRequest</code><br>
-        Startet eine Abfrage der Daten.
-      </li>
-    </ul><br>
-    <a name="LuftdatenInfoget"></a>
-    <b>Get</b>
-    <ul>
-      <li>
-        <code>sensors</code><br>
-        Listet alle Sensoren auf.
-      </li>
-    </ul><br>
-    <a name="LuftdatenInforeadings"></a>
-    <b>Readings</b><br>
-    <ul>
-      <li>
-        <code>airQuality</code>
-        1 => gut<br>
-        2 => mittelmä&suml;ig<br>
-        3 => ungesund für empfindliche Menschen<br>
-        4 => ungesund<br>
-        5 => sehr ungesund<br>
-        6 => katastrophal<br>
-      </li>
-      <li>
-        <code>altitude</code><br>
-        Höhe über NN
-      </li>
-      <li>
-        <code>humidity</code><br>
-        Relative Luftfeuchtgkeit in %
-      </li>
-      <li>
-        <code>illuminanceFull</code><br>
-        Helligkeit des vollen Bereich in lux
-      </li>
-      <li>
-        <code>illuminanceIR</code><br>
-        Helligkeit des IR Bereich in lux
-      </li>
-      <li>
-        <code>illuminanceUV</code><br>
-        Helligkeit des UV Bereich in lux
-      </li>
-      <li>
-        <code>illuminanceVisible</code><br>
-        Helligkeit des sichtbaren Bereich in lux
-      </li>
-      <li>
-        <code>latitude</code><br>
-        Längengrad
-      </li>
-      <li>
-        <code>location</code><br>
-        Standort als "Postleitzahl Ort"<br>
-        Nur bei remote Abfrage verf&uuml;gbar.
-      </li>
-      <li>
-        <code>longitude</code><br>
-        Breitengrad
-      </li>
-      <li>
-        <code>PM1</code><br>
-        Menge der Partikel mit einem Durchmesser von weniger als 1 µm in µg/m³
-      </li>
-      <li>
-        <code>PM2.5</code><br>
-        Menge der Partikel mit einem Durchmesser von weniger als 2.5 µm in µg/m³
-      </li>
-      <li>
-        <code>PM10</code><br>
-        Menge der Partikel mit einem Durchmesser von weniger als 10 µm in µg/m³
-      </li>
-      <li>
-        <code>pressure</code><br>
-        Luftdruck in hPa
-      </li>
-      <li>
-        <code>pressureNN</code><br>
-        Luftdruck für Normal Null in hPa<br>
-        Wird bei aktivem Luftdruck- und Temperatursensor berechnet, sofern sich
-        der Sensor nicht auf Normal Null befindet.<br>
-        Hierzu ist die Höhe, kann über Kartendienste oder SmartPhone ermittelt
-        werden, auf der Konfigurationsseite anzugeben.
-      </li>
-      <li>
-        <code>signal</code><br>
-        WLAN Signalst&auml;rke in dBm<br>
-        Nur bei local Abfrage verf&uuml;gbar.
-      </li>
-      <li>
-        <code>temperature</code><br>
-        Temperatur in °C
-      </li>
-      <li>
-        <code>UVIntensity</code><br>
-        UV Intensität in W
-      </li>
-      <li>
-        <code>UVRisk</code><br>
-        UV Risiko von 1 bis 5
-      </li>
-    </ul><br>
-    <a name="LuftdatenInfoattr"></a>
-    <b>Attribute</b>
-    <ul>
-      <li>
-        <code>disable 1</code><br>
-        Es werden keine Abfragen mehr gestartet.
-      </li>
-      <li>
-        <a href="#disabledForIntervals">
-          <u><code>disabledForIntervals HH:MM-HH:MM HH:MM-HH-MM ...</code></u>
-        </a>
-      </li>
-      <li>
-        <code>interval &lt;seconds&gt;</code><br>
-        Intervall in Sekunden in dem Abfragen durchgef&uuml;hrt werden.<br>
-        Der Vorgabe- und Mindestwert betr&auml;gt 300 Sekunden.
-      </li>
-      <li>
-        <code>timeout &lt;seconds&gt;</code><br>
-        Timeout in Sekunden für die Abfragen.<br>
-        Der Vorgabe- und Mindestwert betr&auml;gt 5 Sekunden.
-      </li>
-    </ul>
-  </ul>
-</div>
+<p><span id="LuftdatenInfo"></span></p>
+<h1 id="luftdateninfo">LuftdatenInfo</h1>
+<p>LuftdatenInfo ist das FHEM Modul um Feinstaub-, Temperatur- und Luftfeuchtichkeitswerte von den selbstbau Feinstaub Sensoren von <a href="Luftdaten.info" class="uri">Luftdaten.info</a> auszulesen.<br>
+Dabei können die Werte direkt vom Server oder auch lokal abgefragt werden.<br>
+Bei einer lokalen Abfrage werden durch eine <a href="forum.fhem.de/index.php/topic,73879">alternative Firmware</a> noch weitere Sensoren unterstützt.</p>
+<h3 id="vorraussetzungen">Vorraussetzungen</h3>
+<p>Das Perl-Modul "JSON" wird benötigt.<br>
+Unter Debian (basierten) System, kann dies mittels<br>
+<code>apt-get install libjson-perl</code><br>
+installiert werden.</p>
+<p><span id="LuftdatenInfodefine"></span></p>
+<h2 id="define">Define</h2>
+<p>Abfrage von Luftdaten.info:<br>
+<code>define &lt;name&gt; LuftdatenInfo remote &lt;SENSORID1&gt; [&lt;SENSORID2&gt; ..]</code><br>
+Lokale Abfrage:<br>
+<code>define &lt;name&gt; LuftdatenInfo local &lt;IP&gt;</code><br>
+Umleiten von Readings:<br>
+<code>define &lt;name&gt; LuftdatenInfo slave &lt;master-name&gt; &lt;sensor1 sensor2 ...&gt;</code></p>
+<p>Für eine Abfrage der Daten vom Server müssem alle betroffenenen SensorIDs angegeben werden. Die IDs vom SDS01 stehen rechts auf der Seite <a href="maps.Luftdaten.info" class="uri">maps.Luftdaten.info</a>. Die DHT22 SensorID entspricht normalerweise der SDS011 SensorID + 1.<br>
+Bei einer Abfrage werden die die Positionsangaben verglichen und bei einer Abweichung eine Meldung ins Log geschrieben.</p>
+<p>Für eine lokale Abfrage der Daten muss die IP Addresse oder der Hostname angegeben werden.</p>
+<p>Werden mehrere ähnliche Sensoren lokal betrieben lassen sich die doppelten Werte (z.B. temperature) auf ein slave Gerät umleiten.</p>
+<p><span id="LuftdatenInfoset"></span></p>
+<h2 id="set">Set</h2>
+<ul>
+  <li><code>statusRequest</code><br>
+  Startet eine Abfrage der Daten.</li>
+</ul>
+<p><span id="LuftdatenInfoget"></span></p>
+<h2 id="get">Get</h2>
+<ul>
+  <li><code>sensors</code><br>
+  Listet alle konfigurierten Sensoren auf.</li>
+</ul>
+<p><span id="LuftdatenInforeadings"></span></p>
+<h2 id="readings">Readings</h2>
+<ul>
+  <li><code>airQuality</code><br>
+  1 =&gt; gut<br>
+  2 =&gt; mittelmäßig<br>
+  3 =&gt; ungesund für empfindliche Menschen<br>
+  4 =&gt; ungesund<br>
+  5 =&gt; sehr ungesund<br>
+  6 =&gt; katastrophal</li>
+  <li><code>altitude</code><br>
+  Höhe über NN</li>
+  <li><code>humidity</code><br>
+  Relative Luftfeuchtgkeit in %</li>
+  <li><code>illuminanceFull</code><br>
+  Helligkeit des vollen Bereich in lux</li>
+  <li><code>illuminanceIR</code><br>
+  Helligkeit des IR Bereich in lux</li>
+  <li><code>illuminanceUV</code><br>
+  Helligkeit des UV Bereich in lux</li>
+  <li><code>illuminanceVisible</code><br>
+  Helligkeit des sichtbaren Bereich in lux</li>
+  <li><code>latitude</code><br>
+  Längengrad</li>
+  <li><code>location</code><br>
+  Standort als "Postleitzahl Ort"<br>
+  Nur bei remote Abfrage verfügbar.</li>
+  <li><code>longitude</code><br>
+  Breitengrad</li>
+  <li><code>PM1</code><br>
+  Menge der Partikel mit einem Durchmesser von weniger als 1 µm in µg/m³</li>
+  <li><code>PM2.5</code><br>
+  Menge der Partikel mit einem Durchmesser von weniger als 2.5 µm in µg/m³</li>
+  <li><code>PM10</code><br>
+  Menge der Partikel mit einem Durchmesser von weniger als 10 µm in µg/m³</li>
+  <li><code>pressure</code><br>
+  Luftdruck in hPa</li>
+  <li><code>pressureNN</code><br>
+  Luftdruck für Normal Null in hPa.<br>
+  Wird bei aktivem Luftdruck- und Temperatursensor berechnet, sofern sich der Sensor nicht auf Normal Null befindet. Hierzu ist die Höhe, kann über Kartendienste oder SmartPhone ermittelt werden, auf der Konfigurationsseite anzugeben.</li>
+  <li><code>signal</code><br>
+  WLAN Signalstärke in dBm<br>
+  Nur bei local Abfrage verfügbar.</li>
+  <li><code>temperature</code><br>
+  Temperatur in °C</li>
+  <li><code>UVIntensity</code><br>
+  UV Intensität in W</li>
+  <li><code>UVRisk</code><br>
+  UV Risiko von 1 bis 5</li>
+</ul>
+<p><span id="LuftdatenInfoattr"></span></p>
+<h2 id="attribute">Attribute</h2>
+<ul>
+  <li><code>disable 1</code><br>
+  Es werden keine Abfragen mehr gestartet.</li>
+  <li>
+    <a href="#disabledForIntervals"><code>disabledForIntervals HH:MM-HH:MM HH:MM-HH-MM ...</code></a>
+  </li>
+  <li><code>interval &lt;seconds&gt;</code><br>
+  Intervall in Sekunden in dem Abfragen durchgeführt werden.<br>
+  Der Vorgabe- und Mindestwert beträgt 300 Sekunden.</li>
+  <li><code>rawReading 1</code><br>
+  Als Readingsnamen werden die Bezeichnungen verwendet, die in der Firmware angegeben sind. Dies kann sinnvoll sein, wenn neue Sensoren an den NodeMCU angeschlossen werden für die noch kein Mapping vorhanden ist.</li>
+  <li><code>timeout &lt;seconds&gt;</code><br>
+  Timeout in Sekunden für die Abfragen. Der Vorgabe- und Mindestwert beträgt 5 Sekunden.</li>
+</ul>
 
 =end html_DE
 =cut

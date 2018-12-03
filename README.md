@@ -5,7 +5,7 @@
   There is an [alternative Firmware](forum.fhem.de/index.php/topic,73879) to support more sensors.
 
 ### Prerequisites
-  The Perl module "JSON" is required.
+  The Perl module "JSON" is required.  
   Under Debian (based) system, this can be installed using  
   `apt-get install libjson-perl`.
 
@@ -86,8 +86,7 @@
 ## Attribute
   - `disable 1`  
     No queries are started.
-  - [<span class="underline">`disabledForIntervals HH:MM-HH:MM
-    HH:MM-HH-MM ...`</span>](#disabledForIntervals)
+  - [`disabledForIntervals HH:MM-HH:MM HH:MM-HH-MM ...`](#disabledForIntervals)
   - `interval <seconds>`  
     Interval in seconds in which queries are performed.  
     The default and minimum value is 300 seconds.
