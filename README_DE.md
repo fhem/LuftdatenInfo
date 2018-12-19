@@ -2,7 +2,7 @@
 # LuftdatenInfo
   LuftdatenInfo ist das FHEM-Modul um Feinstaub-, Temperatur- und Luftfeuchtichkeitswerte von den DIY-Feinstaub-Sensoren von [Luftdaten.info](Luftdaten.info) auszulesen.  
   Dabei können die Werte direkt vom Server oder auch lokal abgefragt werden.  
-  Bei einer lokalen Abfrage werden durch eine [alternative Firmware](forum.fhem.de/index.php/topic,73879) noch weitere Sensoren unterstützt.  
+  Bei einer lokalen Abfrage werden durch eine [alternative Firmware](https://forum.fhem.de/index.php/topic,73879) noch weitere Sensoren unterstützt.  
 
 ### Vorraussetzungen
   Das Perl-Modul "JSON" wird benötigt.  

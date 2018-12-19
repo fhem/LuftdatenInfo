@@ -2,7 +2,7 @@
 # LuftdatenInfo
   LuftdatenInfo is the FHEM module to read particulate matter, temperature and humidity values from the self-assembly particulate matter sensors from [Luftdaten.info](Luftdaten.info).  
   The values can be queried directly from the server or locally.
-  There is an [alternative Firmware](forum.fhem.de/index.php/topic,73879) to support more sensors.
+  There is an [alternative Firmware](https://forum.fhem.de/index.php/topic,73879) to support more sensors locally.
 
 ### Prerequisites
   The Perl module "JSON" is required.  
