@@ -1,8 +1,8 @@
 <span id="LuftdatenInfo"></span>
 # LuftdatenInfo
-  LuftdatenInfo ist das FHEM Modul um Feinstaub-, Temperatur- und Luftfeuchtichkeitswerte von den selbstbau Feinstaub Sensoren von [Luftdaten.info](Luftdaten.info) auszulesen.  
+  LuftdatenInfo ist das FHEM-Modul um Feinstaub-, Temperatur- und Luftfeuchtichkeitswerte von den DIY-Feinstaub-Sensoren von [Luftdaten.info](Luftdaten.info) auszulesen.  
   Dabei können die Werte direkt vom Server oder auch lokal abgefragt werden.  
-  Bei einer lokalen Abfrage werden durch eine [alternative Firmware](forum.fhem.de/index.php/topic,73879) noch weitere Sensoren unterstützt.  
+  Bei einer lokalen Abfrage werden durch eine [alternative Firmware](https://forum.fhem.de/index.php/topic,73879) noch weitere Sensoren unterstützt.  
 
 ### Vorraussetzungen
   Das Perl-Modul "JSON" wird benötigt.  
@@ -61,7 +61,7 @@
     Längengrad
   - `location`  
     Standort als "Postleitzahl Ort"  
-    Nur bei remote Abfrage verfügbar.
+    Nur bei Remote-Abfrage verfügbar.
   - `longitude`  
     Breitengrad
   - `PM1`  
@@ -73,17 +73,17 @@
   - `pressure`  
     Luftdruck in hPa
   - `pressureNN`  
-    Luftdruck für Normal Null in hPa.  
-    Wird bei aktivem Luftdruck- und Temperatursensor berechnet, sofern sich der Sensor nicht auf Normal Null befindet. Hierzu ist die Höhe, kann über Kartendienste oder SmartPhone ermittelt werden, auf der Konfigurationsseite anzugeben.
+    Luftdruck für Normalhöhennull (NHN) in hPa.  
+    Wird bei aktivem Luftdruck- und Temperatursensor berechnet, sofern sich der Sensor nicht auf Normalhöhennull (NHN) befindet. Hierzu ist die Höhe, kann über Kartendienste oder SmartPhone ermittelt werden, auf der Konfigurationsseite anzugeben.
   - `signal`  
     WLAN Signalstärke in dBm  
     Nur bei local Abfrage verfügbar.
   - `temperature`  
     Temperatur in °C
   - `UVIntensity`  
-    UV Intensität in W
+    UV-Intensität in W
   - `UVRisk`  
-    UV Risiko von 1 bis 5
+    UV-Risiko von 1 bis 5
 
 <span id="LuftdatenInfoattr"></span>
 ## Attribute

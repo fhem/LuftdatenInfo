@@ -1,25 +1,25 @@
 <span id="LuftdatenInfo"></span>
 # LuftdatenInfo
-  LuftdatenInfo is the FHEM module to read particulate matter, temperature and humidity values ​​from the self-assembly particulate matter sensors from [Luftdaten.info](Luftdaten.info).  
-  The values ​​can be queried directly from the server or locally.
-  There is an [alternative Firmware](forum.fhem.de/index.php/topic,73879) to support more sensors.
+  LuftdatenInfo is the FHEM module to read particulate matter, temperature and humidity values from the self-assembly particulate matter sensors from [Luftdaten.info](Luftdaten.info).  
+  The values can be queried directly from the server or locally.
+  There is an [alternative Firmware](https://forum.fhem.de/index.php/topic,73879) to support more sensors locally.
 
 ### Prerequisites
   The Perl module "JSON" is required.  
-  Under Debian (based) system, this can be installed using  
+  Using Debian (based) systems, the module can be installed using  
   `apt-get install libjson-perl`.
 
 <span id="LuftdatenInfodefine"></span>
 ## Define
   Query of Luftdaten.info:  
-  `define <name> air data info remote <SENSORID1> [<SENSORID2> ..]`  
+  `define <name> LuftdatenInfo remote <SENSORID1> [<SENSORID2> ..]`  
   Local query:  
-  `define <name> Air DataInfo local <IP>`  
+  `define <name> LuftdatenInfo local <IP>`  
   Redirecting readings:  
   `define <name> LuftdatenInfo slave <master-name> <sensor1 sensor2 ...>`
 
   To query the data from the server, all affected SensorIDs must be specified. The IDs of the SDS01 are on the right side of the page [maps.Luftdaten.info](maps.Luftdaten.info). The DHT22 SensorID normally corresponds to the SDS011 SensorID + 1.  
-  While parsing the data the location values from all sensors will be compared and a message will be written into the log if they differ.  
+  While parsing the data, the location values from all sensors will be compared and a message will be written into the logfile if they differ.  
 
   For a local query of the data, the IP address or hostname must be specified.
 
@@ -33,7 +33,7 @@
 <span id="LuftdatenInfoget"></span>
 ## Get
   - `sensors`  
-    Lists all senors.
+    Lists all sensors.
 
 <span id="LuftdatenInforeadings"></span>
 ## Readings
@@ -48,18 +48,20 @@
   - `humidity`  
     Relative humidity in %
   - `illuminanceFull`  
-    Illuminace of the full spectrum in lux
+    Illuminance of the full spectrum in lux
   - `illuminanceIR`  
-    Iilluminace of the IR spectrum in lux
+    Illuminance of the IR spectrum in lux
   - `illuminanceUV`  
-    Iilluminace of the UV spectrum in lux
+    Illuminance of the UV spectrum in lux
   - `illuminanceVisible`  
-    Iilluminace of the visible spectrum in lux
+    Illuminance of the visible spectrum in lux
   - `latitude`  
+    Only available with remote query.
   - `location`  
     location as "postcode city"  
     Only available with remote query.
   - `longitude`  
+    Only available with remote query.
   - `PM1`  
     Quantity of particles with a diameter of less than 1 μm in μg/m³
   - `PM2.5`  
@@ -85,7 +87,7 @@
 <span id="LuftdatenInfoattr"></span>
 ## Attribute
   - `disable 1`  
-    No queries are started.
+    No queries will be done.
   - [`disabledForIntervals HH:MM-HH:MM HH:MM-HH-MM ...`](#disabledForIntervals)
   - `interval <seconds>`  
     Interval in seconds in which queries are performed.  
