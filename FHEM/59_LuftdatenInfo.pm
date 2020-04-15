@@ -63,6 +63,8 @@ sub LuftdatenInfo_Initialize {
     . "timeout "
     . $readingFnAttributes
   ;
+
+  return;
 }
 
 # regular Fn ##################################################################
@@ -280,7 +282,7 @@ sub LuftdatenInfo_GetHttpResponse {
   $param->{url} = "http://$arg/data.json"
     if($MODE eq "local");
 
-  HttpUtils_NonblockingGet($param);
+  return HttpUtils_NonblockingGet($param);
 }
 
 sub LuftdatenInfo_ParseHttpResponse {
@@ -540,6 +542,8 @@ sub LuftdatenInfo_statusRequest {
       readingsSingleUpdate($hash, "state", "master not defined", 1);
     }
   }
+
+  return;
 }
 
 1;
