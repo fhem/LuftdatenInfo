@@ -88,7 +88,7 @@ sub LuftdatenInfo_Define {
   delete($hash->{MASTER});
   delete($hash->{SENSORS});
 
-  my $hadTemperature = 1 if(ReadingsVal($SELF, "temperature", undef));
+  my $hadTemperature = ReadingsVal($SELF, "temperature", undef) ? 1 : 0;
 
   delete($hash->{READINGS});
 
@@ -172,14 +172,11 @@ sub LuftdatenInfo_Undefine {
 }
 
 sub LuftdatenInfo_Set {
-  my ($hash, @a) = @_;
+  my $hash = shift;
   my $TYPE = $hash->{TYPE};
-
-  return "\"set $TYPE\" needs at least one argument" if(@a < 2);
-
-  my $SELF = shift @a;
-	my $argument = shift @a;
-  my $value = join(" ", @a) if (@a);
+  my $SELF = shift;
+  my $argument = shift // return qq{"set $TYPE" needs at least one argument};
+  my $value = = join(' ', @_);
 
   my %LuftdatenInfo_sets = (
     "statusRequest" => "statusRequest:noArg",
@@ -200,14 +197,11 @@ sub LuftdatenInfo_Set {
 }
 
 sub LuftdatenInfo_Get {
-  my ($hash, @a) = @_;
+  my $hash = shift;
   my $TYPE = $hash->{TYPE};
-
-  return "\"get $TYPE\" needs at least one argument" if(@a < 2);
-
-  my $SELF = shift @a;
-	my $argument = shift @a;
-  my $value = join(" ", @a) if (@a);
+  my $SELF = shift;
+  my $argument = shift // return qq{"get $TYPE" needs at least one argument};
+  my $value = = join(' ', @_);
 
   my %LuftdatenInfo_gets = (
     "sensors" => "sensors:noArg",
