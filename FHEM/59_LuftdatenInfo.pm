@@ -31,21 +31,21 @@ package main;
   use HttpUtils;
 
 # forward declarations ########################################################
-sub LuftdatenInfo_Initialize($);
+sub LuftdatenInfo_Initialize;
 
-sub LuftdatenInfo_Define($$);
-sub LuftdatenInfo_Undefine($$);
-sub LuftdatenInfo_Set($@);
-sub LuftdatenInfo_Get($@);
-sub LuftdatenInfo_Attr(@);
+sub LuftdatenInfo_Define;
+sub LuftdatenInfo_Undefine;
+sub LuftdatenInfo_Set;
+sub LuftdatenInfo_Get;
+sub LuftdatenInfo_Attr;
 
-sub LuftdatenInfo_GetHttpResponse($$);
-sub LuftdatenInfo_ParseHttpResponse($);
+sub LuftdatenInfo_GetHttpResponse;
+sub LuftdatenInfo_ParseHttpResponse;
 
-sub LuftdatenInfo_statusRequest($);
+sub LuftdatenInfo_statusRequest;
 
 # initialize ##################################################################
-sub LuftdatenInfo_Initialize($) {
+sub LuftdatenInfo_Initialize {
   my ($hash) = @_;
   my $TYPE = "LuftdatenInfo";
 
@@ -66,7 +66,7 @@ sub LuftdatenInfo_Initialize($) {
 }
 
 # regular Fn ##################################################################
-sub LuftdatenInfo_Define($$) {
+sub LuftdatenInfo_Define {
   my ($hash, $def) = @_;
   my ($SELF, $TYPE, $MODE, $DEF) = split(/[\s]+/, $def, 4);
   my $rc = eval{
@@ -162,7 +162,7 @@ sub LuftdatenInfo_Define($$) {
   return;
 }
 
-sub LuftdatenInfo_Undefine($$) {
+sub LuftdatenInfo_Undefine {
   my ($hash, $arg) = @_;
 
   HttpUtils_Close($hash);
@@ -171,7 +171,7 @@ sub LuftdatenInfo_Undefine($$) {
   return;
 }
 
-sub LuftdatenInfo_Set($@) {
+sub LuftdatenInfo_Set {
   my ($hash, @a) = @_;
   my $TYPE = $hash->{TYPE};
 
@@ -199,7 +199,7 @@ sub LuftdatenInfo_Set($@) {
   return;
 }
 
-sub LuftdatenInfo_Get($@) {
+sub LuftdatenInfo_Get {
   my ($hash, @a) = @_;
   my $TYPE = $hash->{TYPE};
 
@@ -227,7 +227,7 @@ sub LuftdatenInfo_Get($@) {
   return;
 }
 
-sub LuftdatenInfo_Attr(@) {
+sub LuftdatenInfo_Attr {
   my ($cmd, $SELF, $attribute, $value) = @_;
   my $hash = $defs{$SELF};
   my $TYPE = $hash->{TYPE};
@@ -265,7 +265,7 @@ sub LuftdatenInfo_Attr(@) {
 }
 
 # HttpUtils Fn ################################################################
-sub LuftdatenInfo_GetHttpResponse($$) {
+sub LuftdatenInfo_GetHttpResponse {
   my ($hash, $arg) = @_;
   my $SELF = $hash->{NAME};
   my $TYPE = $hash->{TYPE};
@@ -289,7 +289,7 @@ sub LuftdatenInfo_GetHttpResponse($$) {
   HttpUtils_NonblockingGet($param);
 }
 
-sub LuftdatenInfo_ParseHttpResponse($) {
+sub LuftdatenInfo_ParseHttpResponse {
   my ($param, $err, $data) = @_;
   my $hash = $param->{hash};
   my $SELF = $hash->{NAME};
@@ -509,7 +509,7 @@ sub LuftdatenInfo_ParseHttpResponse($) {
 }
 
 # module Fn ###################################################################
-sub LuftdatenInfo_statusRequest($) {
+sub LuftdatenInfo_statusRequest {
   my ($hash) = @_;
   my $SELF = $hash->{NAME};
   my $TYPE = $hash->{TYPE};
