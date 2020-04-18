@@ -54,7 +54,7 @@ sub LuftdatenInfo_Initialize {
 # regular Fn ##################################################################
 sub LuftdatenInfo_Define {
   my $hash = shift;
-  my ($SELF, $TYPE, $MODE, $DEF) = split(m{[\s]+}x, shift, 4);
+  my ($SELF, $TYPE, $MODE, $DEF) = split m{[\s]+}x, shift, 4;
   my $rc = eval{
     require JSON;
     JSON->import();
@@ -94,7 +94,7 @@ sub LuftdatenInfo_Define {
     return("Usage: define <name> $TYPE $MODE <master-name> <reading regexps>")
       if($DEF !~ m{\s}x);
 
-    ($hash->{MASTER}, $hash->{SENSORS}) = split(m{[\s]+}x, $DEF, 2);
+    ($hash->{MASTER}, $hash->{SENSORS}) = split m{[\s]+}x, $DEF, 2;
 
     delete($defs{$hash->{MASTER}}->{READINGS})
       if(IsDevice($hash->{MASTER}, $TYPE));
@@ -509,7 +509,7 @@ sub LuftdatenInfo_statusRequest {
 
   if($MODE eq "remote"){
     LuftdatenInfo_GetHttpResponse($hash, $_)
-      foreach(split(m{[\s]+}x, $hash->{SENSORIDS}));
+      foreach(split m{[\s]+}x, $hash->{SENSORIDS});
   }
   elsif($MODE eq "local"){
     LuftdatenInfo_GetHttpResponse($hash, $hash->{ADDRESS});
