@@ -69,8 +69,8 @@ sub LuftdatenInfo_Initialize {
 
 # regular Fn ##################################################################
 sub LuftdatenInfo_Define {
-  my ($hash, $def) = @_;
-  my ($SELF, $TYPE, $MODE, $DEF) = split(/[\s]+/, $def, 4);
+  my $hash = shift;
+  my ($SELF, $TYPE, $MODE, $DEF) = split(m{[\s]+}x, shift, 4);
   my $rc = eval{
     require JSON;
     JSON->import();
@@ -96,21 +96,21 @@ sub LuftdatenInfo_Define {
 
   if($MODE eq "remote"){
     return("Usage: define <name> $TYPE $MODE <SENSORID1> [<SENSORID2> ...]")
-      if($DEF !~ m/^[\s\d]+$/);
+      if($DEF !~ m{^[\s\d]+$}x);
 
     $hash->{SENSORIDS} = $DEF;
   }
   elsif($MODE eq "local"){
     return("Usage: define <name> $TYPE $MODE <IP>")
-      if($DEF =~ m/\s/);
+      if($DEF =~ m{\s}x);
 
     $hash->{ADDRESS} = $DEF;
   }
   elsif($MODE eq "slave"){
     return("Usage: define <name> $TYPE $MODE <master-name> <reading regexps>")
-      if($DEF !~ m/\s/);
+      if($DEF !~ m{\s}x);
 
-    ($hash->{MASTER}, $hash->{SENSORS}) = split(/[\s]+/, $DEF, 2);
+    ($hash->{MASTER}, $hash->{SENSORS}) = split(m{[\s]+}x, $DEF, 2);
 
     delete($defs{$hash->{MASTER}}->{READINGS})
       if(IsDevice($hash->{MASTER}, $TYPE));
@@ -370,7 +370,7 @@ sub LuftdatenInfo_ParseHttpResponse {
       readingsBeginUpdate($hash);
 
       foreach (@{$sensor->{sensordatavalues}}){
-        $_->{value} =~ m/^(\S+)(\s|$)/;
+        $_->{value} =~ m{^(\S+)(\s|$)}x;
         $_->{value} = $1;
         my $knownReading = 1;
 
@@ -380,13 +380,13 @@ sub LuftdatenInfo_ParseHttpResponse {
         elsif($_->{value_type} eq "P2"){
           $_->{value_type} = "PM2.5";
         }
-        elsif($_->{value_type} =~ /temperature$/){
+        elsif($_->{value_type} =~ m{temperature$}x){
           $_->{value_type} = "temperature";
         }
-        elsif($_->{value_type} =~ /humidity$/){
+        elsif($_->{value_type} =~ m{humidity$}x){
           $_->{value_type} = "humidity";
         }
-        elsif($_->{value_type} =~ /pressure$/){
+        elsif($_->{value_type} =~ m{pressure$}x){
           $_->{value} = ($_->{value} > 10000 ? $_->{value} / 100 : $_->{value});
           $_->{value_type} = "pressure";
         }
@@ -416,7 +416,7 @@ sub LuftdatenInfo_ParseHttpResponse {
 
       foreach (@{$data->{sensordatavalues}}){
         my $knownReading = 1;
-        $_->{value} =~ m/^(\S+)(\s|$)/;
+        $_->{value} =~ m{^(\S+)(\s|$)}x;
         $_->{value} = $1;
 
         my $device = (devspec2array(
@@ -424,66 +424,66 @@ sub LuftdatenInfo_ParseHttpResponse {
         ))[0];
         $device = IsDevice($device, $TYPE) ? $defs{$device} : $hash;
 
-        if($_->{value_type} =~ /P0$/){
+        if($_->{value_type} =~ m{P0$}x){
           $_->{value_type} = "PM1";
         }
-        elsif($_->{value_type} =~ /P1$/){
+        elsif($_->{value_type} =~ m{P1$}x){
           $_->{value_type} = "PM10";
         }
-        elsif($_->{value_type} =~ /P2$/){
+        elsif($_->{value_type} =~ m{P2$}x){
           $_->{value_type} = "PM2.5";
         }
-        elsif($_->{value_type} =~ /_air_quality$/){
+        elsif($_->{value_type} =~ m{_air_quality$}x){
           $_->{value_type} = "airQuality";
         }
-        elsif($_->{value_type} =~ /_height$/){
+        elsif($_->{value_type} =~ m{_height$}x){
           $_->{value_type} = "altitude";
         }
-        elsif($_->{value_type} =~ /_date$/){
+        elsif($_->{value_type} =~ m{_date$}x){
           $_->{value_type} = "date";
         }
-        elsif($_->{value_type} =~ /humidity$/){
+        elsif($_->{value_type} =~ m{humidity$}x){
           $_->{value_type} = "humidity";
         }
-        elsif($_->{value_type} =~ /_Full$/){
+        elsif($_->{value_type} =~ m{_Full$}x){
           $_->{value_type} = "illuminanceFull";
         }
-        elsif($_->{value_type} =~ /_UV$/){
+        elsif($_->{value_type} =~ m{_UV$}x){
           $_->{value_type} = "illuminanceUV";
         }
-        elsif($_->{value_type} =~ /_IR$/){
+        elsif($_->{value_type} =~ m{_IR$}x){
           $_->{value_type} = "illuminanceIR";
         }
-        elsif($_->{value_type} =~ /_Visible$/){
+        elsif($_->{value_type} =~ m{_Visible$}x){
           $_->{value_type} = "illuminanceVisible";
         }
-        elsif($_->{value_type} =~ /_lat$/){
+        elsif($_->{value_type} =~ m{_lat$}x){
           $_->{value_type} = "latitude";
         }
-        elsif($_->{value_type} =~ /_lon$/){
+        elsif($_->{value_type} =~ m{_lon$}x){
           $_->{value_type} = "longitude";
         }
-        elsif($_->{value_type} =~ /pressure$/){
+        elsif($_->{value_type} =~ m{pressure$}x){
           $_->{value} = ($_->{value} > 10000 ? $_->{value} / 100 : $_->{value});
           $_->{value_type} = "pressure";
         }
-        elsif($_->{value_type} =~ /pressure_nn$/){
+        elsif($_->{value_type} =~ m{pressure_nn$}x){
           $_->{value} = ($_->{value} > 10000 ? $_->{value} / 100 : $_->{value});
           $_->{value_type} = "pressureNN";
         }
-        elsif($_->{value_type} =~ /_risk/){
+        elsif($_->{value_type} =~ m{_risk}x){
           $_->{value_type} = "UVRisk";
         }
         elsif($_->{value_type} eq "signal"){
           $_->{value_type} = "signal";
         }
-        elsif($_->{value_type} =~ /temperature$/){
+        elsif($_->{value_type} =~ m{temperature$}x){
           $_->{value_type} = "temperature";
         }
-        elsif($_->{value_type} =~ /_watt/){
+        elsif($_->{value_type} =~ m{_watt}x){
           $_->{value_type} = "UVIntensity";
         }
-        elsif($_->{value_type} =~ /_time$/){
+        elsif($_->{value_type} =~ m{_time$}x){
           $_->{value_type} = "time";
         }
         else{
@@ -525,7 +525,7 @@ sub LuftdatenInfo_statusRequest {
 
   if($MODE eq "remote"){
     LuftdatenInfo_GetHttpResponse($hash, $_)
-      foreach(split(/[\s]+/, $hash->{SENSORIDS}));
+      foreach(split(m{[\s]+}x, $hash->{SENSORIDS}));
   }
   elsif($MODE eq "local"){
     LuftdatenInfo_GetHttpResponse($hash, $hash->{ADDRESS});
