@@ -40,14 +40,14 @@ sub LuftdatenInfo_Initialize {
   $hash->{GetFn}    = \&LuftdatenInfo_Get;
   $hash->{AttrFn}   = \&LuftdatenInfo_Attr;
 
-  $hash->{AttrList} = ""
-    . "disable:1,0 "
-    . "disabledForIntervals "
-    . "interval "
-    . "rawReading:0,1 "
-    . "timeout "
-    . $readingFnAttributes
-  ;
+  $hash->{AttrList} = join q{ }, qw{
+    disable:1,0
+    disabledForIntervals
+    interval
+    rawReading:0,1
+    timeout
+    $readingFnAttributes
+  };
 
   return;
 }
