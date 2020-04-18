@@ -33,13 +33,12 @@ package main;
 # initialize ##################################################################
 sub LuftdatenInfo_Initialize {
   my ($hash) = @_;
-  my $TYPE = "LuftdatenInfo";
 
-  $hash->{DefFn}    = $TYPE."_Define";
-  $hash->{UndefFn}  = $TYPE."_Undefine";
-  $hash->{SetFn}    = $TYPE."_Set";
-  $hash->{GetFn}    = $TYPE."_Get";
-  $hash->{AttrFn}   = $TYPE."_Attr";
+  $hash->{DefFn}    = \&LuftdatenInfo_Define;
+  $hash->{UndefFn}  = \&LuftdatenInfo_Undefine;
+  $hash->{SetFn}    = \&LuftdatenInfo_Set;
+  $hash->{GetFn}    = \&LuftdatenInfo_Get;
+  $hash->{AttrFn}   = \&LuftdatenInfo_Attr;
 
   $hash->{AttrList} = ""
     . "disable:1,0 "
