@@ -178,7 +178,7 @@ sub LuftdatenInfo_Set {
   my $TYPE = $hash->{TYPE};
   my $SELF = shift;
   my $argument = shift // return qq{"set $TYPE" needs at least one argument};
-  my $value = = join(' ', @_);
+  my $value = qq{@_};
 
   my %LuftdatenInfo_sets = (
     "statusRequest" => "statusRequest:noArg",
@@ -203,7 +203,7 @@ sub LuftdatenInfo_Get {
   my $TYPE = $hash->{TYPE};
   my $SELF = shift;
   my $argument = shift // return qq{"get $TYPE" needs at least one argument};
-  my $value = = join(' ', @_);
+  my $value = qq{@_};
 
   my %LuftdatenInfo_gets = (
     "sensors" => "sensors:noArg",
@@ -566,9 +566,9 @@ Under Debian (based) system, this can be installed using<br>
 <p><span id="LuftdatenInfodefine"></span></p>
 <h2 id="define">Define</h2>
 <p>Query of Luftdaten.info:<br>
-<code>define &lt;name&gt; air data info remote &lt;SENSORID1&gt; [&lt;SENSORID2&gt; ..]</code><br>
+<code>define &lt;name&gt; LuftdatenInfo remote &lt;SENSORID1&gt; [&lt;SENSORID2&gt; ..]</code><br>
 Local query:<br>
-<code>define &lt;name&gt; Air DataInfo local &lt;IP&gt;</code><br>
+<code>define &lt;name&gt; LuftdatenInfo local &lt;IP&gt;</code><br>
 Redirecting readings:<br>
 <code>define &lt;name&gt; LuftdatenInfo slave &lt;master-name&gt; &lt;sensor1 sensor2 ...&gt;</code></p>
 <p>To query the data from the server, all affected SensorIDs must be specified. The IDs of the SDS01 are on the right side of the page <a href="maps.Luftdaten.info" class="uri">maps.Luftdaten.info</a>. The DHT22 SensorID normally corresponds to the SDS011 SensorID + 1.<br>
