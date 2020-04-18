@@ -46,8 +46,7 @@ sub LuftdatenInfo_Initialize {
     interval
     rawReading:0,1
     timeout
-    $readingFnAttributes
-  };
+  }, $readingFnAttributes;
 
   return;
 }
