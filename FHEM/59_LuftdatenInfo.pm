@@ -30,20 +30,6 @@ package main;
 
   use HttpUtils;
 
-# forward declarations ########################################################
-sub LuftdatenInfo_Initialize;
-
-sub LuftdatenInfo_Define;
-sub LuftdatenInfo_Undefine;
-sub LuftdatenInfo_Set;
-sub LuftdatenInfo_Get;
-sub LuftdatenInfo_Attr;
-
-sub LuftdatenInfo_GetHttpResponse;
-sub LuftdatenInfo_ParseHttpResponse;
-
-sub LuftdatenInfo_statusRequest;
-
 # initialize ##################################################################
 sub LuftdatenInfo_Initialize {
   my ($hash) = @_;
