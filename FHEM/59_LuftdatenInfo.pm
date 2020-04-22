@@ -64,7 +64,7 @@ sub LuftdatenInfo_Define {
     return ("Error loading JSON. Maybe this module is not installed? "
           . "\nUnder debian (based) system it can be installed using "
           . "\"apt-get install libjson-perl\"" )
-      unless ($rc);
+      if ( !$rc );
 
     delete( $hash->{SENSORIDS} );
     delete( $hash->{ADDRESS} );
@@ -129,14 +129,14 @@ sub LuftdatenInfo_Define {
 
     $hash->{MODE} = $MODE;
 
-    unless ( $MODE eq "slave" ) {
+    if ( $MODE ne "slave" ) {
         my $minInterval = $hash->{MODE} eq "local" ? 30 : 300;
         my $interval = AttrVal( $SELF, "interval", $minInterval );
-        $interval = $minInterval unless ( looks_like_number($interval) );
+        $interval = $minInterval if ( !looks_like_number($interval) );
         $interval = $minInterval if ( $interval < $minInterval );
         my $minTimeout = 5;
         my $timeout = AttrVal( $SELF, "timeout", $minTimeout );
-        $timeout = $minTimeout unless ( looks_like_number($timeout) );
+        $timeout = $minTimeout if ( !looks_like_number($timeout) );
         $timeout = $minTimeout if ( $timeout < $minTimeout );
 
         $hash->{INTERVAL} = $interval;
@@ -236,7 +236,7 @@ sub LuftdatenInfo_Attr {
     elsif ( $attribute eq "interval" ) {
         my $minInterval = $hash->{CONNECTION} eq "local" ? 30 : 300;
         my $interval = $cmd eq "set" ? $value : $minInterval;
-        $interval = $minInterval unless ( looks_like_number($interval) );
+        $interval = $minInterval if ( !looks_like_number($interval) );
         $interval = $minInterval if ( $interval < $minInterval );
 
         $hash->{INTERVAL} = $interval;
@@ -244,7 +244,7 @@ sub LuftdatenInfo_Attr {
     elsif ( $attribute eq "timeout" ) {
         my $minTimeout = 5;
         my $timeout = $cmd eq "set" ? $value : $minTimeout;
-        $timeout = $minTimeout unless ( looks_like_number($timeout) );
+        $timeout = $minTimeout if ( !looks_like_number($timeout) );
         $timeout = $minTimeout if ( $timeout < $minTimeout );
 
         $hash->{TIMEOUT} = $timeout;
@@ -349,7 +349,7 @@ sub LuftdatenInfo_ParseHttpResponse {
                 return;
             }
 
-            unless ( ReadingsVal( $SELF, "location", undef ) ) {
+            if ( !ReadingsVal( $SELF, "location", undef ) ) {
                 $param = {
                     url => "http://nominatim.openstreetmap.org/reverse?"
                       . "format=json&lat=$latitude&lon=$longitude",
