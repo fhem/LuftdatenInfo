@@ -32,7 +32,7 @@ use HttpUtils;
 
 # initialize ##################################################################
 sub LuftdatenInfo_Initialize {
-    my ($hash) = @_;
+    my $hash = shift;
 
     $hash->{DefFn}   = \&LuftdatenInfo_Define;
     $hash->{UndefFn} = \&LuftdatenInfo_Undefine;
@@ -151,7 +151,7 @@ sub LuftdatenInfo_Define {
 }
 
 sub LuftdatenInfo_Undefine {
-    my ( $hash, $arg ) = @_;
+    my $hash = shift;
 
     HttpUtils_Close($hash);
     RemoveInternalTimer($hash);
@@ -214,9 +214,12 @@ sub LuftdatenInfo_Get {
 }
 
 sub LuftdatenInfo_Attr {
-    my ( $cmd, $SELF, $attribute, $value ) = @_;
-    my $hash = $defs{$SELF};
-    my $TYPE = $hash->{TYPE};
+    my $cmd       = shift;
+    my $SELF      = shift;
+    my $hash      = $defs{$SELF};
+    my $TYPE      = $hash->{TYPE};
+    my $attribute = shift;
+    my $value     = qq{@_};
 
     Log3( $SELF, 5, "$TYPE ($SELF) - entering LuftdatenInfo_Attr" );
 
@@ -252,7 +255,8 @@ sub LuftdatenInfo_Attr {
 
 # HttpUtils Fn ################################################################
 sub LuftdatenInfo_GetHttpResponse {
-    my ( $hash, $arg ) = @_;
+    my $hash    = shift;
+    my $arg     = shift;
     my $SELF    = $hash->{NAME};
     my $TYPE    = $hash->{TYPE};
     my $MODE    = $hash->{MODE};
@@ -276,10 +280,12 @@ sub LuftdatenInfo_GetHttpResponse {
 }
 
 sub LuftdatenInfo_ParseHttpResponse {
-    my ( $param, $err, $data ) = @_;
-    my $hash = $param->{hash};
-    my $SELF = $hash->{NAME};
-    my $TYPE = $hash->{TYPE};
+    my $param = shift;
+    my $err   = shift;
+    my $data  = shift;
+    my $hash  = $param->{hash};
+    my $SELF  = $hash->{NAME};
+    my $TYPE  = $hash->{TYPE};
 
     Log3( $SELF, 5,
         "$TYPE ($SELF) - entering LuftdatenInfo_ParseHttpResponse" );
@@ -522,10 +528,10 @@ sub LuftdatenInfo_ParseHttpResponse {
 
 # module Fn ###################################################################
 sub LuftdatenInfo_statusRequest {
-    my ($hash) = @_;
-    my $SELF   = $hash->{NAME};
-    my $TYPE   = $hash->{TYPE};
-    my $MODE   = $hash->{MODE};
+    my $hash     = shift;
+    my $SELF     = $hash->{NAME};
+    my $TYPE     = $hash->{TYPE};
+    my $MODE     = $hash->{MODE};
     my $interval = InternalVal( $SELF, "INTERVAL", undef );
 
     Log3( $SELF, 5, "$TYPE ($SELF) - entering LuftdatenInfo_statusRequest" );
