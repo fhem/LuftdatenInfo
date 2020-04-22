@@ -338,7 +338,7 @@ sub LuftdatenInfo_ParseHttpResponse {
       }
 
       unless (ReadingsVal($SELF, "location", undef)){
-        my $param = {
+        $param = {
           url      => "http://nominatim.openstreetmap.org/reverse?".
                       "format=json&lat=$latitude&lon=$longitude",
           timeout  => $hash->{TIMEOUT},
