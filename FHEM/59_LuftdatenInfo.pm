@@ -32,7 +32,7 @@ use HttpUtils;
 
 # initialize ##################################################################
 sub LuftdatenInfo_Initialize {
-    my $hash = shift;
+    my $hash = shift // {};
 
     $hash->{DefFn}   = \&LuftdatenInfo_Define;
     $hash->{UndefFn} = \&LuftdatenInfo_Undefine;
@@ -53,18 +53,29 @@ sub LuftdatenInfo_Initialize {
 
 # regular Fn ##################################################################
 sub LuftdatenInfo_Define {
-    my $hash = shift;
+    my $hash = shift // {};
     my ( $SELF, $TYPE, $MODE, $DEF ) = split m{[\s]+}xms, shift, 4;
+
+    if ( !$MODE ) {
+        return (
+            join qq{\n},
+            qq{Usage:},
+            qq{  define <name> $TYPE remote <SENSORID1> [<SENSORID2> ...]},
+            qq{  define <name> $TYPE local  <IP>},
+            qq{  define <name> $TYPE slave  <master-name> <sensor1 sensor2 ...>}
+        );
+    }
+
     my $rc = eval {
         require JSON;
         JSON->import();
         1;
-    };
-
-    return (q{Error loading JSON. Maybe this module is not installed? }
-          . q{\nUnder debian (based) system it can be installed using }
-          . q{"apt-get install libjson-perl} )
-      if ( !$rc );
+    } // return (
+        join qq{\n},
+        q{Error loading JSON. Maybe this module is not installed? },
+        q{Under debian (based) system it can be installed using },
+        q{"apt-get install libjson-perl}
+    );
 
     delete( $hash->{SENSORIDS} );
     delete( $hash->{ADDRESS} );
@@ -72,8 +83,6 @@ sub LuftdatenInfo_Define {
     delete( $hash->{TIMEOUT} );
     delete( $hash->{MASTER} );
     delete( $hash->{SENSORS} );
-
-    my $hadTemperature = ReadingsVal( $SELF, q{temperature}, undef ) ? 1 : 0;
 
     delete( $hash->{READINGS} );
 
@@ -103,7 +112,8 @@ sub LuftdatenInfo_Define {
     else {
         if ( looks_like_number($MODE) ) {
             $hash->{SENSORIDS} = $MODE;
-            $hash->{SENSORIDS} .= q{ } . ( $MODE + 1 ) if ($hadTemperature);
+            $hash->{SENSORIDS} .= q{ } . ( $MODE + 1 )
+              if ReadingsVal( $SELF, q{temperature}, undef );
             $hash->{SENSORIDS} .= qq{ $DEF}
               if ( $DEF && looks_like_number($DEF) );
 
@@ -117,13 +127,6 @@ sub LuftdatenInfo_Define {
             $MODE = q{local};
 
             $hash->{DEF} = qq{$MODE $hash->{ADDRESS}};
-        }
-        else {
-            return (
-qq{Usage: define <name> $TYPE remote <SENSORID1> [<SENSORID2> ...]}
-                  . qq{       define <name> $TYPE local <IP>}
-                  . qq{       define <name> $TYPE slave <master-name> <sensor1 sensor2 ...>}
-            );
         }
     }
 
@@ -151,7 +154,7 @@ qq{Usage: define <name> $TYPE remote <SENSORID1> [<SENSORID2> ...]}
 }
 
 sub LuftdatenInfo_Undefine {
-    my $hash = shift;
+    my $hash = shift // {};
 
     HttpUtils_Close($hash);
     RemoveInternalTimer($hash);
@@ -256,7 +259,7 @@ sub LuftdatenInfo_Attr {
 # HttpUtils Fn ################################################################
 sub LuftdatenInfo_GetHttpResponse {
     my $hash    = shift;
-    my $arg     = shift;
+    my $arg     = shift // return;
     my $SELF    = $hash->{NAME};
     my $TYPE    = $hash->{TYPE};
     my $MODE    = $hash->{MODE};
@@ -281,7 +284,7 @@ sub LuftdatenInfo_GetHttpResponse {
 }
 
 sub LuftdatenInfo_ParseHttpResponse {
-    my $param = shift;
+    my $param = shift // return;
     my $err   = shift;
     my $data  = shift;
     my $hash  = $param->{hash};
@@ -340,8 +343,8 @@ sub LuftdatenInfo_ParseHttpResponse {
             my $longitude = $sensor->{location}{longitude};
 
             if (   $latitude ne ReadingsVal( $SELF, q{latitude}, $latitude )
-                || $longitude ne ReadingsVal( $SELF, q{longitude}, $longitude )
-              )
+                || $longitude ne
+                ReadingsVal( $SELF, q{longitude}, $longitude ) )
             {
                 Log3( $SELF, 2,
                         qq{$TYPE ($SELF) - }
@@ -531,7 +534,7 @@ qq{MASTER=$SELF:FILTER=SENSORS=(.+ )?$sensordatavalue->{value_type}( .+)?}
 
 # module Fn ###################################################################
 sub LuftdatenInfo_statusRequest {
-    my $hash     = shift;
+    my $hash     = shift // {};
     my $SELF     = $hash->{NAME};
     my $TYPE     = $hash->{TYPE};
     my $MODE     = $hash->{MODE};
