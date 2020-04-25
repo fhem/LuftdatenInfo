@@ -371,8 +371,8 @@ sub LuftdatenInfo_ParseHttpResponse {
             readingsBeginUpdate($hash);
 
             for my $sensordatavalue ( @{ $sensor->{sensordatavalues} } ) {
-                $sensordatavalue->{value} =~ m{^(\S+)(\s|$)}xms;
-                $sensordatavalue->{value} = $1;
+                $sensordatavalue->{value} =
+                  ( split m{\s}xms, $sensordatavalue->{value} )[0];
                 my $knownReading = 1;
 
                 if ( $sensordatavalue->{value_type} eq q{P1} ) {
@@ -430,12 +430,13 @@ sub LuftdatenInfo_ParseHttpResponse {
 
             for my $sensordatavalue ( @{ $data->{sensordatavalues} } ) {
                 my $knownReading = 1;
-                $sensordatavalue->{value} =~ m{^(\S+)(\s|$)}xms;
-                $sensordatavalue->{value} = $1;
-
+                $sensordatavalue->{value} =
+                  ( split m{\s}xms, $sensordatavalue->{value} )[0];
                 my $device = (
                     devspec2array(
-qq{MASTER=$SELF:FILTER=SENSORS=(.+ )?$sensordatavalue->{value_type}( .+)?}
+                        join q{:FILTER=},
+                        qq{MASTER=$SELF},
+                        qq{SENSORS=(.+ )?$sensordatavalue->{value_type}( .+)?}
                     )
                 )[0];
                 $device = IsDevice( $device, $TYPE ) ? $defs{$device} : $hash;
