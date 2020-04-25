@@ -61,9 +61,9 @@ sub LuftdatenInfo_Define {
         1;
     };
 
-    return ("Error loading JSON. Maybe this module is not installed? "
-          . "\nUnder debian (based) system it can be installed using "
-          . "\"apt-get install libjson-perl\"" )
+    return (q{Error loading JSON. Maybe this module is not installed? }
+          . q{\nUnder debian (based) system it can be installed using }
+          . q{"apt-get install libjson-perl} )
       if ( !$rc );
 
     delete( $hash->{SENSORIDS} );
@@ -73,26 +73,26 @@ sub LuftdatenInfo_Define {
     delete( $hash->{MASTER} );
     delete( $hash->{SENSORS} );
 
-    my $hadTemperature = ReadingsVal( $SELF, "temperature", undef ) ? 1 : 0;
+    my $hadTemperature = ReadingsVal( $SELF, q{temperature}, undef ) ? 1 : 0;
 
     delete( $hash->{READINGS} );
 
-    if ( $MODE eq "remote" ) {
+    if ( $MODE eq q{remote} ) {
         return (
-            "Usage: define <name> $TYPE $MODE <SENSORID1> [<SENSORID2> ...]")
+            qq{Usage: define <name> $TYPE $MODE <SENSORID1> [<SENSORID2> ...]})
           if ( $DEF !~ m{^[\s\d]+$}xms );
 
         $hash->{SENSORIDS} = $DEF;
     }
-    elsif ( $MODE eq "local" ) {
-        return ("Usage: define <name> $TYPE $MODE <IP>")
+    elsif ( $MODE eq q{local} ) {
+        return (qq{Usage: define <name> $TYPE $MODE <IP>})
           if ( $DEF =~ m{\s}xms );
 
         $hash->{ADDRESS} = $DEF;
     }
-    elsif ( $MODE eq "slave" ) {
+    elsif ( $MODE eq q{slave} ) {
         return (
-            "Usage: define <name> $TYPE $MODE <master-name> <reading regexps>")
+            q{Usage: define <name> $TYPE $MODE <master-name> <reading regexps>})
           if ( $DEF !~ m{\s}xms );
 
         ( $hash->{MASTER}, $hash->{SENSORS} ) = split m{[\s]+}xms, $DEF, 2;
@@ -103,39 +103,39 @@ sub LuftdatenInfo_Define {
     else {
         if ( looks_like_number($MODE) ) {
             $hash->{SENSORIDS} = $MODE;
-            $hash->{SENSORIDS} .= " " . ( $MODE + 1 ) if ($hadTemperature);
-            $hash->{SENSORIDS} .= " $DEF"
+            $hash->{SENSORIDS} .= q{ } . ( $MODE + 1 ) if ($hadTemperature);
+            $hash->{SENSORIDS} .= qq{ $DEF}
               if ( $DEF && looks_like_number($DEF) );
 
-            $MODE = "remote";
+            $MODE = q{remote};
 
-            $hash->{DEF} = "$MODE $hash->{SENSORIDS}";
+            $hash->{DEF} = qq{$MODE $hash->{SENSORIDS}};
         }
         elsif ( !$DEF ) {
             $hash->{ADDRESS} = $MODE;
 
-            $MODE = "local";
+            $MODE = q{local};
 
-            $hash->{DEF} = "$MODE $hash->{ADDRESS}";
+            $hash->{DEF} = qq{$MODE $hash->{ADDRESS}};
         }
         else {
             return (
-"Usage: define <name> $TYPE remote <SENSORID1> [<SENSORID2> ...]"
-                  . "       define <name> $TYPE local <IP>"
-                  . "       define <name> $TYPE slave <master-name> <sensor1 sensor2 ...>"
+qq{Usage: define <name> $TYPE remote <SENSORID1> [<SENSORID2> ...]}
+                  . qq{       define <name> $TYPE local <IP>}
+                  . qq{       define <name> $TYPE slave <master-name> <sensor1 sensor2 ...>}
             );
         }
     }
 
     $hash->{MODE} = $MODE;
 
-    if ( $MODE ne "slave" ) {
-        my $minInterval = $hash->{MODE} eq "local" ? 30 : 300;
-        my $interval = AttrVal( $SELF, "interval", $minInterval );
+    if ( $MODE ne q{slave} ) {
+        my $minInterval = $hash->{MODE} eq q{local} ? 30 : 300;
+        my $interval = AttrVal( $SELF, q{interval}, $minInterval );
         $interval = $minInterval if ( !looks_like_number($interval) );
         $interval = $minInterval if ( $interval < $minInterval );
         my $minTimeout = 5;
-        my $timeout = AttrVal( $SELF, "timeout", $minTimeout );
+        my $timeout = AttrVal( $SELF, q{timeout}, $minTimeout );
         $timeout = $minTimeout if ( !looks_like_number($timeout) );
         $timeout = $minTimeout if ( $timeout < $minTimeout );
 
@@ -143,7 +143,7 @@ sub LuftdatenInfo_Define {
         $hash->{TIMEOUT}  = $timeout;
     }
 
-    readingsSingleUpdate( $hash, "state", "active", 1 );
+    readingsSingleUpdate( $hash, q{state}, q{active}, 1 );
 
     LuftdatenInfo_statusRequest($hash);
 
@@ -166,14 +166,14 @@ sub LuftdatenInfo_Set {
     my $argument = shift // return qq{"set $TYPE" needs at least one argument};
     my $value    = qq{@_};
 
-    my %LuftdatenInfo_sets = ( "statusRequest" => "statusRequest:noArg", );
+    my %LuftdatenInfo_sets = ( q{statusRequest} => q{statusRequest:noArg}, );
 
-    return ( "Unknown argument $argument, choose one of "
-          . join( " ", values %LuftdatenInfo_sets ) )
+    return ( qq{Unknown argument $argument, choose one of }
+          . join( q{ }, values %LuftdatenInfo_sets ) )
       if ( !exists( $LuftdatenInfo_sets{$argument} ) );
 
     if ( !IsDisabled($SELF) ) {
-        if ( $argument eq "statusRequest" ) {
+        if ( $argument eq q{statusRequest} ) {
             LuftdatenInfo_statusRequest($hash);
         }
     }
@@ -188,22 +188,22 @@ sub LuftdatenInfo_Get {
     my $argument = shift // return qq{"get $TYPE" needs at least one argument};
     my $value    = qq{@_};
 
-    my %LuftdatenInfo_gets = ( "sensors" => "sensors:noArg", );
+    my %LuftdatenInfo_gets = ( q{sensors} => q{sensors:noArg}, );
 
-    return ( "Unknown argument $argument, choose one of "
-          . join( " ", values %LuftdatenInfo_gets ) )
+    return ( qq{Unknown argument $argument, choose one of }
+          . join( q{ }, values %LuftdatenInfo_gets ) )
       if ( !exists( $LuftdatenInfo_gets{$argument} ) );
 
-    if ( $argument eq "sensors" ) {
+    if ( $argument eq q{sensors} ) {
         return (
             join(
-                "\n",
+                q{\n},
                 split(
-                    " ",
+                    q{ },
                     ReadingsVal(
-                        InternalVal( $SELF, "MASTER", $SELF ),
-                        ".sensors",
-                        "No sensors found."
+                        InternalVal( $SELF, q{MASTER}, $SELF ),
+                        q{.sensors},
+                        q{No sensors found.}
                     )
                 )
             )
@@ -221,29 +221,29 @@ sub LuftdatenInfo_Attr {
     my $attribute = shift;
     my $value     = qq{@_};
 
-    Log3( $SELF, 5, "$TYPE ($SELF) - entering LuftdatenInfo_Attr" );
+    Log3( $SELF, 5, qq{$TYPE ($SELF) - entering LuftdatenInfo_Attr} );
 
-    if ( $attribute eq "disable" ) {
+    if ( $attribute eq q{disable} ) {
         if ( $value && $value == 1 ) {
-            readingsSingleUpdate( $hash, "state", "disabled", 1 );
+            readingsSingleUpdate( $hash, q{state}, q{disabled}, 1 );
         }
-        elsif ( $cmd eq "del" || !$value ) {
+        elsif ( $cmd eq q{del} || !$value ) {
             LuftdatenInfo_statusRequest($hash);
 
-            readingsSingleUpdate( $hash, "state", "active", 1 );
+            readingsSingleUpdate( $hash, q{state}, q{active}, 1 );
         }
     }
-    elsif ( $attribute eq "interval" ) {
-        my $minInterval = $hash->{CONNECTION} eq "local" ? 30 : 300;
-        my $interval = $cmd eq "set" ? $value : $minInterval;
+    elsif ( $attribute eq q{interval} ) {
+        my $minInterval = $hash->{CONNECTION} eq q{local} ? 30 : 300;
+        my $interval = $cmd eq q{set} ? $value : $minInterval;
         $interval = $minInterval if ( !looks_like_number($interval) );
         $interval = $minInterval if ( $interval < $minInterval );
 
         $hash->{INTERVAL} = $interval;
     }
-    elsif ( $attribute eq "timeout" ) {
+    elsif ( $attribute eq q{timeout} ) {
         my $minTimeout = 5;
-        my $timeout = $cmd eq "set" ? $value : $minTimeout;
+        my $timeout = $cmd eq q{set} ? $value : $minTimeout;
         $timeout = $minTimeout if ( !looks_like_number($timeout) );
         $timeout = $minTimeout if ( $timeout < $minTimeout );
 
@@ -262,19 +262,20 @@ sub LuftdatenInfo_GetHttpResponse {
     my $MODE    = $hash->{MODE};
     my $timeout = $hash->{TIMEOUT};
 
-    Log3( $SELF, 5, "$TYPE ($SELF) - entering LuftdatenInfo_GetHttpResponse" );
+    Log3( $SELF, 5,
+        qq{$TYPE ($SELF) - entering LuftdatenInfo_GetHttpResponse} );
 
     my $param = {
         timeout  => $timeout,
         hash     => $hash,
-        method   => "GET",
-        header   => "Accept: application/json",
+        method   => q{GET},
+        header   => q{Accept: application/json},
         callback => \&LuftdatenInfo_ParseHttpResponse,
     };
-    $param->{url} = "http://api.luftdaten.info/v1/sensor/$arg/"
-      if ( $MODE eq "remote" );
-    $param->{url} = "http://$arg/data.json"
-      if ( $MODE eq "local" );
+    $param->{url} = qq{http://api.luftdaten.info/v1/sensor/$arg/}
+      if ( $MODE eq q{remote} );
+    $param->{url} = qq{http://$arg/data.json}
+      if ( $MODE eq q{local} );
 
     return HttpUtils_NonblockingGet($param);
 }
@@ -288,75 +289,76 @@ sub LuftdatenInfo_ParseHttpResponse {
     my $TYPE  = $hash->{TYPE};
 
     Log3( $SELF, 5,
-        "$TYPE ($SELF) - entering LuftdatenInfo_ParseHttpResponse" );
+        qq{$TYPE ($SELF) - entering LuftdatenInfo_ParseHttpResponse} );
 
-    if ( $err ne "" ) {
-        Log3( $SELF, 2, "$TYPE ($SELF) - error while request: $err" );
+    if ( $err ne q{} ) {
+        Log3( $SELF, 2, qq{$TYPE ($SELF) - error while request: $err} );
 
-        readingsSingleUpdate( $hash, "state", "error", 1 );
+        readingsSingleUpdate( $hash, q{state}, q{error}, 1 );
     }
-    elsif ( $data eq "[]" ) {
+    elsif ( $data eq q{[]} ) {
         Log3( $SELF, 2,
-            "$TYPE ($SELF) - error while request: no data returned" );
+            qq{$TYPE ($SELF) - error while request: no data returned} );
 
-        readingsSingleUpdate( $hash, "state", "error", 1 );
+        readingsSingleUpdate( $hash, q{state}, q{error}, 1 );
     }
-    elsif ( $data ne "" ) {
-        Log3 $SELF, 4, "$TYPE ($SELF) - returned data: $data";
+    elsif ( $data ne q{} ) {
+        Log3 $SELF, 4, qq{$TYPE ($SELF) - returned data: $data};
 
-        $data = encode( 'UTF-8', $data );
+        $data = encode( q{UTF-8}, $data );
         $data = eval { decode_json($data) };
 
         if ($@) {
-            Log3( $SELF, 2, "$TYPE ($SELF) - error while request: $@" );
+            Log3( $SELF, 2, qq{$TYPE ($SELF) - error while request: $@} );
 
-            readingsSingleUpdate( $hash, "state", "error", 1 );
+            readingsSingleUpdate( $hash, q{state}, q{error}, 1 );
 
             return;
         }
 
         my $MODE = $hash->{MODE};
-        my $rawReading = AttrVal( $SELF, "rawReading", 0 );
+        my $rawReading = AttrVal( $SELF, q{rawReading}, 0 );
 
         if ( $param->{url} =~ m{openstreetmap}xms ) {
             my $address = $data->{address};
 
             readingsSingleUpdate(
                 $hash,
-                "location",
-                "$address->{postcode} "
+                q{location},
+                qq{$address->{postcode} }
                   . ( $address->{city} ? $address->{city} : $address->{town} ),
                 1
             );
         }
-        elsif ( $MODE eq "remote" ) {
+        elsif ( $MODE eq q{remote} ) {
             my $sensor      = @{$data}[-1];
             my $sensor_type = $sensor->{sensor}{sensor_type}{name};
 
-            Log3 $SELF, 5, "$TYPE ($SELF) - parsing $sensor_type data";
+            Log3 $SELF, 5, qq{$TYPE ($SELF) - parsing $sensor_type data};
 
             my $latitude  = $sensor->{location}{latitude};
             my $longitude = $sensor->{location}{longitude};
 
-            if (   $latitude ne ReadingsVal( $SELF, "latitude", $latitude )
-                || $longitude ne ReadingsVal( $SELF, "longitude", $longitude ) )
+            if (   $latitude ne ReadingsVal( $SELF, q{latitude}, $latitude )
+                || $longitude ne ReadingsVal( $SELF, q{longitude}, $longitude )
+              )
             {
                 Log3( $SELF, 2,
-                        "$TYPE ($SELF) - "
-                      . "$sensor->{sensor}{sensor_type}{name} position differs from "
-                      . "other sensor position" );
+                        qq{$TYPE ($SELF) - }
+                      . qq{$sensor->{sensor}{sensor_type}{name} position differs from }
+                      . q{other sensor position} );
 
                 return;
             }
 
-            if ( !ReadingsVal( $SELF, "location", undef ) ) {
+            if ( !ReadingsVal( $SELF, q{location}, undef ) ) {
                 $param = {
-                    url => "http://nominatim.openstreetmap.org/reverse?"
-                      . "format=json&lat=$latitude&lon=$longitude",
+                    url => q{http://nominatim.openstreetmap.org/reverse?}
+                      . qq{format=json&lat=$latitude&lon=$longitude},
                     timeout  => $hash->{TIMEOUT},
                     hash     => $hash,
-                    method   => "GET",
-                    header   => "Accept: application/json",
+                    method   => q{GET},
+                    header   => q{Accept: application/json},
                     callback => \&LuftdatenInfo_ParseHttpResponse,
                 };
 
@@ -370,17 +372,17 @@ sub LuftdatenInfo_ParseHttpResponse {
                 $sensordatavalue->{value} = $1;
                 my $knownReading = 1;
 
-                if ( $sensordatavalue->{value_type} eq "P1" ) {
-                    $sensordatavalue->{value_type} = "PM10";
+                if ( $sensordatavalue->{value_type} eq q{P1} ) {
+                    $sensordatavalue->{value_type} = q{PM10};
                 }
-                elsif ( $sensordatavalue->{value_type} eq "P2" ) {
-                    $sensordatavalue->{value_type} = "PM2.5";
+                elsif ( $sensordatavalue->{value_type} eq q{P2} ) {
+                    $sensordatavalue->{value_type} = q{PM2.5};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{temperature$}xms ) {
-                    $sensordatavalue->{value_type} = "temperature";
+                    $sensordatavalue->{value_type} = q{temperature};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{humidity$}xms ) {
-                    $sensordatavalue->{value_type} = "humidity";
+                    $sensordatavalue->{value_type} = q{humidity};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{pressure$}xms ) {
                     $sensordatavalue->{value} = (
@@ -388,7 +390,7 @@ sub LuftdatenInfo_ParseHttpResponse {
                         ? $sensordatavalue->{value} / 100
                         : $sensordatavalue->{value}
                     );
-                    $sensordatavalue->{value_type} = "pressure";
+                    $sensordatavalue->{value_type} = q{pressure};
                 }
                 else {
                     $knownReading = 0;
@@ -401,13 +403,13 @@ sub LuftdatenInfo_ParseHttpResponse {
                 ) if ( $knownReading || $rawReading );
             }
 
-            readingsBulkUpdateIfChanged( $hash, "latitude",  $latitude );
-            readingsBulkUpdateIfChanged( $hash, "longitude", $longitude );
-            readingsBulkUpdate( $hash, "state", "active" );
+            readingsBulkUpdateIfChanged( $hash, q{latitude},  $latitude );
+            readingsBulkUpdateIfChanged( $hash, q{longitude}, $longitude );
+            readingsBulkUpdate( $hash, q{state}, q{active} );
             readingsEndUpdate( $hash, 1 );
         }
-        elsif ( $MODE eq "local" ) {
-            my @slaves = devspec2array("TYPE=$TYPE:FILTER=MASTER=$SELF");
+        elsif ( $MODE eq q{local} ) {
+            my @slaves = devspec2array(qq{TYPE=$TYPE:FILTER=MASTER=$SELF});
             my @sensors;
 
             for my $sensordatavalue ( @{ $data->{sensordatavalues} } ) {
@@ -418,10 +420,10 @@ sub LuftdatenInfo_ParseHttpResponse {
                 readingsBeginUpdate( $defs{$device} );
             }
 
-            readingsBulkUpdateIfChanged( $hash, "softwareVersion",
+            readingsBulkUpdateIfChanged( $hash, q{softwareVersion},
                 $data->{software_version} );
-            readingsBulkUpdateIfChanged( $hash, ".sensors",
-                join( " ", sort (@sensors) ) );
+            readingsBulkUpdateIfChanged( $hash, q{.sensors},
+                join( q{ }, sort (@sensors) ) );
 
             for my $sensordatavalue ( @{ $data->{sensordatavalues} } ) {
                 my $knownReading = 1;
@@ -430,50 +432,50 @@ sub LuftdatenInfo_ParseHttpResponse {
 
                 my $device = (
                     devspec2array(
-"MASTER=$SELF:FILTER=SENSORS=(.+ )?$sensordatavalue->{value_type}( .+)?"
+qq{MASTER=$SELF:FILTER=SENSORS=(.+ )?$sensordatavalue->{value_type}( .+)?}
                     )
                 )[0];
                 $device = IsDevice( $device, $TYPE ) ? $defs{$device} : $hash;
 
                 if ( $sensordatavalue->{value_type} =~ m{P0$}xms ) {
-                    $sensordatavalue->{value_type} = "PM1";
+                    $sensordatavalue->{value_type} = q{PM1};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{P1$}xms ) {
-                    $sensordatavalue->{value_type} = "PM10";
+                    $sensordatavalue->{value_type} = q{PM10};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{P2$}xms ) {
-                    $sensordatavalue->{value_type} = "PM2.5";
+                    $sensordatavalue->{value_type} = q{PM2.5};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_air_quality$}xms )
                 {
-                    $sensordatavalue->{value_type} = "airQuality";
+                    $sensordatavalue->{value_type} = q{airQuality};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_height$}xms ) {
-                    $sensordatavalue->{value_type} = "altitude";
+                    $sensordatavalue->{value_type} = q{altitude};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_date$}xms ) {
-                    $sensordatavalue->{value_type} = "date";
+                    $sensordatavalue->{value_type} = q{date};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{humidity$}xms ) {
-                    $sensordatavalue->{value_type} = "humidity";
+                    $sensordatavalue->{value_type} = q{humidity};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_Full$}xms ) {
-                    $sensordatavalue->{value_type} = "illuminanceFull";
+                    $sensordatavalue->{value_type} = q{illuminanceFull};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_UV$}xms ) {
-                    $sensordatavalue->{value_type} = "illuminanceUV";
+                    $sensordatavalue->{value_type} = q{illuminanceUV};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_IR$}xms ) {
-                    $sensordatavalue->{value_type} = "illuminanceIR";
+                    $sensordatavalue->{value_type} = q{illuminanceIR};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_Visible$}xms ) {
-                    $sensordatavalue->{value_type} = "illuminanceVisible";
+                    $sensordatavalue->{value_type} = q{illuminanceVisible};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_lat$}xms ) {
-                    $sensordatavalue->{value_type} = "latitude";
+                    $sensordatavalue->{value_type} = q{latitude};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_lon$}xms ) {
-                    $sensordatavalue->{value_type} = "longitude";
+                    $sensordatavalue->{value_type} = q{longitude};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{pressure$}xms ) {
                     $sensordatavalue->{value} = (
@@ -481,7 +483,7 @@ sub LuftdatenInfo_ParseHttpResponse {
                         ? $sensordatavalue->{value} / 100
                         : $sensordatavalue->{value}
                     );
-                    $sensordatavalue->{value_type} = "pressure";
+                    $sensordatavalue->{value_type} = q{pressure};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{pressure_nn$}xms ) {
                     $sensordatavalue->{value} = (
@@ -489,22 +491,22 @@ sub LuftdatenInfo_ParseHttpResponse {
                         ? $sensordatavalue->{value} / 100
                         : $sensordatavalue->{value}
                     );
-                    $sensordatavalue->{value_type} = "pressureNN";
+                    $sensordatavalue->{value_type} = q{pressureNN};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_risk}xms ) {
-                    $sensordatavalue->{value_type} = "UVRisk";
+                    $sensordatavalue->{value_type} = q{UVRisk};
                 }
-                elsif ( $sensordatavalue->{value_type} eq "signal" ) {
-                    $sensordatavalue->{value_type} = "signal";
+                elsif ( $sensordatavalue->{value_type} eq q{signal} ) {
+                    $sensordatavalue->{value_type} = q{signal};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{temperature$}xms ) {
-                    $sensordatavalue->{value_type} = "temperature";
+                    $sensordatavalue->{value_type} = q{temperature};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_watt}xms ) {
-                    $sensordatavalue->{value_type} = "UVIntensity";
+                    $sensordatavalue->{value_type} = q{UVIntensity};
                 }
                 elsif ( $sensordatavalue->{value_type} =~ m{_time$}xms ) {
-                    $sensordatavalue->{value_type} = "time";
+                    $sensordatavalue->{value_type} = q{time};
                 }
                 else {
                     $knownReading = 0;
@@ -518,7 +520,7 @@ sub LuftdatenInfo_ParseHttpResponse {
             }
 
             for my $device ( $SELF, @slaves ) {
-                readingsBulkUpdate( $defs{$device}, "state", "active" );
+                readingsBulkUpdate( $defs{$device}, q{state}, q{active} );
                 readingsEndUpdate( $defs{$device}, 1 );
             }
         }
@@ -533,36 +535,36 @@ sub LuftdatenInfo_statusRequest {
     my $SELF     = $hash->{NAME};
     my $TYPE     = $hash->{TYPE};
     my $MODE     = $hash->{MODE};
-    my $interval = InternalVal( $SELF, "INTERVAL", undef );
+    my $interval = InternalVal( $SELF, q{INTERVAL}, undef );
 
-    Log3( $SELF, 5, "$TYPE ($SELF) - entering LuftdatenInfo_statusRequest" );
+    Log3( $SELF, 5, qq{$TYPE ($SELF) - entering LuftdatenInfo_statusRequest} );
 
     if ($interval) {
         RemoveInternalTimer($hash);
         InternalTimer( gettimeofday() + $interval,
-            "LuftdatenInfo_statusRequest", $hash );
+            q{LuftdatenInfo_statusRequest}, $hash );
     }
 
     return if ( IsDisabled($SELF) );
 
-    if ( $MODE eq "remote" ) {
+    if ( $MODE eq q{remote} ) {
         for my $SensorID ( split m{[\s]+}xms, $hash->{SENSORIDS} ) {
             LuftdatenInfo_GetHttpResponse( $hash, $SensorID );
         }
     }
-    elsif ( $MODE eq "local" ) {
+    elsif ( $MODE eq q{local} ) {
         LuftdatenInfo_GetHttpResponse( $hash, $hash->{ADDRESS} );
     }
-    elsif ( $MODE eq "slave" ) {
+    elsif ( $MODE eq q{slave} ) {
         if (   IsDevice( $hash->{MASTER}, $TYPE )
-            && InternalVal( $hash->{MASTER}, "MODE", "" ) eq "local" )
+            && InternalVal( $hash->{MASTER}, q{MODE}, q{} ) eq q{local} )
         {
-            readingsSingleUpdate( $hash, "state", "active", 1 );
+            readingsSingleUpdate( $hash, q{state}, q{active}, 1 );
 
             LuftdatenInfo_statusRequest( $defs{ $hash->{MASTER} } );
         }
         else {
-            readingsSingleUpdate( $hash, "state", "master not defined", 1 );
+            readingsSingleUpdate( $hash, q{state}, q{master not defined}, 1 );
         }
     }
 
